@@ -1,0 +1,48 @@
+﻿<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.ExpertMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加专家记录 -->
+	<insert id="addExpert" parameterType="expert">
+		insert into t_expert(expertUserName,password,name,gender,expertPhoto,birthDate,zhicheng,telephone,address,expertDesc) values 
+		(#{expertUserName},#{password},#{name},#{gender},#{expertPhoto},#{birthDate},#{zhicheng},#{telephone},#{address},#{expertDesc})
+	</insert>
+
+	<!-- 按照查询条件分页查询专家记录 -->
+	<select id="queryExpert" resultMap="expertMap" >
+		select t_expert.* from t_expert ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="expertMap" type="expert">
+        <id property="expertUserName" column="expertUserName" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有专家记录 -->
+	<select id="queryExpertList" resultMap="expertMap" >
+		select t_expert.* from t_expert ${where}
+	</select>
+
+    <!-- 按照查询条件的专家记录数 -->
+	<select id="queryExpertCount" resultType="int">
+		select count(*) from t_expert ${where}
+	</select>
+
+	<!-- 根据主键查询某个专家记录 -->
+	<select id="getExpert" parameterType="string" resultMap="expertMap">
+		select * from t_expert where t_expert.expertUserName = #{expertUserName}
+	</select>
+
+	<!-- 更新专家记录 -->
+	<update id="updateExpert" parameterType="expert">
+		update t_expert set password=#{password},name=#{name},gender=#{gender},expertPhoto=#{expertPhoto},birthDate=#{birthDate},zhicheng=#{zhicheng},telephone=#{telephone},address=#{address},expertDesc=#{expertDesc} where expertUserName = #{expertUserName}
+	</update>
+
+	<!-- 删除专家记录 -->
+	<delete id="deleteExpert" parameterType="string">
+		delete from t_expert where expertUserName=#{expertUserName}
+	</delete>
+
+</mapper>

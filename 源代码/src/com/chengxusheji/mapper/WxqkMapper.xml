@@ -1,0 +1,48 @@
+﻿<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.WxqkMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加文献期刊记录 -->
+	<insert id="addWxqk" parameterType="wxqk">
+		insert into t_wxqk(wxqkType,xueke,title,wxqkPhoto,author,km,keywordInfo,zhaiyao,daoshi,publishDate,wxqkFile) values 
+		(#{wxqkType},#{xueke},#{title},#{wxqkPhoto},#{author},#{km},#{keywordInfo},#{zhaiyao},#{daoshi},#{publishDate},#{wxqkFile})
+	</insert>
+
+	<!-- 按照查询条件分页查询文献期刊记录 -->
+	<select id="queryWxqk" resultMap="wxqkMap" >
+		select t_wxqk.* from t_wxqk ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="wxqkMap" type="wxqk">
+        <id property="qkId" column="qkId" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有文献期刊记录 -->
+	<select id="queryWxqkList" resultMap="wxqkMap" >
+		select t_wxqk.* from t_wxqk ${where}
+	</select>
+
+    <!-- 按照查询条件的文献期刊记录数 -->
+	<select id="queryWxqkCount" resultType="int">
+		select count(*) from t_wxqk ${where}
+	</select>
+
+	<!-- 根据主键查询某个文献期刊记录 -->
+	<select id="getWxqk" parameterType="int" resultMap="wxqkMap">
+		select * from t_wxqk where t_wxqk.qkId = #{qkId}
+	</select>
+
+	<!-- 更新文献期刊记录 -->
+	<update id="updateWxqk" parameterType="wxqk">
+		update t_wxqk set wxqkType=#{wxqkType},xueke=#{xueke},title=#{title},wxqkPhoto=#{wxqkPhoto},author=#{author},km=#{km},keywordInfo=#{keywordInfo},zhaiyao=#{zhaiyao},daoshi=#{daoshi},publishDate=#{publishDate},wxqkFile=#{wxqkFile} where qkId = #{qkId}
+	</update>
+
+	<!-- 删除文献期刊记录 -->
+	<delete id="deleteWxqk" parameterType="int">
+		delete from t_wxqk where qkId=#{qkId}
+	</delete>
+
+</mapper>

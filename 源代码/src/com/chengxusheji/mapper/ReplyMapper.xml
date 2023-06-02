@@ -1,0 +1,50 @@
+﻿<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.ReplyMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加帖子回复记录 -->
+	<insert id="addReply" parameterType="reply">
+		insert into t_reply(postInfoObj,content,userObj,replyTime) values 
+		(#{postInfoObj.postInfoId},#{content},#{userObj.user_name},#{replyTime})
+	</insert>
+
+	<!-- 按照查询条件分页查询帖子回复记录 -->
+	<select id="queryReply" resultMap="replyMap" >
+		select t_reply.* from t_reply,t_postInfo,t_userInfo ${where} and t_reply.postInfoObj = t_postInfo.postInfoId and t_reply.userObj = t_userInfo.user_name limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="replyMap" type="reply">
+        <id property="replyId" column="replyId" />
+        <association property="postInfoObj" column="postInfoObj" select="com.chengxusheji.mapper.PostInfoMapper.getPostInfo" />
+        <association property="userObj" column="userObj" select="com.chengxusheji.mapper.UserInfoMapper.getUserInfo" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有帖子回复记录 -->
+	<select id="queryReplyList" resultMap="replyMap" >
+		select t_reply.* from t_reply,t_postInfo,t_userInfo ${where} and t_reply.postInfoObj = t_postInfo.postInfoId and t_reply.userObj = t_userInfo.user_name
+	</select>
+
+    <!-- 按照查询条件的帖子回复记录数 -->
+	<select id="queryReplyCount" resultType="int">
+		select count(*) from t_reply,t_postInfo,t_userInfo ${where} and t_reply.postInfoObj = t_postInfo.postInfoId and t_reply.userObj = t_userInfo.user_name
+	</select>
+
+	<!-- 根据主键查询某个帖子回复记录 -->
+	<select id="getReply" parameterType="int" resultMap="replyMap">
+		select * from t_reply where t_reply.replyId = #{replyId}
+	</select>
+
+	<!-- 更新帖子回复记录 -->
+	<update id="updateReply" parameterType="reply">
+		update t_reply set postInfoObj=#{postInfoObj.postInfoId},content=#{content},userObj=#{userObj.user_name},replyTime=#{replyTime} where replyId = #{replyId}
+	</update>
+
+	<!-- 删除帖子回复记录 -->
+	<delete id="deleteReply" parameterType="int">
+		delete from t_reply where replyId=#{replyId}
+	</delete>
+
+</mapper>

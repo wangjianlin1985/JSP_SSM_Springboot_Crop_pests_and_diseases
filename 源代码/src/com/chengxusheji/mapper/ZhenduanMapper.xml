@@ -1,0 +1,48 @@
+﻿<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.ZhenduanMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加诊断记录 -->
+	<insert id="addZhenduan" parameterType="zhenduan">
+		insert into t_zhenduan(zhengzhuang,zhenzhuangPhoto,bingyin,tezheng,fbtj,nyyf,zlff,addTime) values 
+		(#{zhengzhuang},#{zhenzhuangPhoto},#{bingyin},#{tezheng},#{fbtj},#{nyyf},#{zlff},#{addTime})
+	</insert>
+
+	<!-- 按照查询条件分页查询诊断记录 -->
+	<select id="queryZhenduan" resultMap="zhenduanMap" >
+		select t_zhenduan.* from t_zhenduan ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="zhenduanMap" type="zhenduan">
+        <id property="zhenduanId" column="zhenduanId" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有诊断记录 -->
+	<select id="queryZhenduanList" resultMap="zhenduanMap" >
+		select t_zhenduan.* from t_zhenduan ${where}
+	</select>
+
+    <!-- 按照查询条件的诊断记录数 -->
+	<select id="queryZhenduanCount" resultType="int">
+		select count(*) from t_zhenduan ${where}
+	</select>
+
+	<!-- 根据主键查询某个诊断记录 -->
+	<select id="getZhenduan" parameterType="int" resultMap="zhenduanMap">
+		select * from t_zhenduan where t_zhenduan.zhenduanId = #{zhenduanId}
+	</select>
+
+	<!-- 更新诊断记录 -->
+	<update id="updateZhenduan" parameterType="zhenduan">
+		update t_zhenduan set zhengzhuang=#{zhengzhuang},zhenzhuangPhoto=#{zhenzhuangPhoto},bingyin=#{bingyin},tezheng=#{tezheng},fbtj=#{fbtj},nyyf=#{nyyf},zlff=#{zlff},addTime=#{addTime} where zhenduanId = #{zhenduanId}
+	</update>
+
+	<!-- 删除诊断记录 -->
+	<delete id="deleteZhenduan" parameterType="int">
+		delete from t_zhenduan where zhenduanId=#{zhenduanId}
+	</delete>
+
+</mapper>

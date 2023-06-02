@@ -1,0 +1,48 @@
+﻿<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace命名空间，为了对sql语句进行隔离，方便管理，mapper开发dao方式，使用namespace有特殊作用  
+mapper代理开发时将namespace指定为mapper接口的全限定名  
+ -->
+<mapper namespace="com.chengxusheji.mapper.CropClassMapper"> 
+<!--在mapper.xml文件中配置很多的sql语句，执行每个sql语句时，封装为MappedStatement对象 
+mapper.xml以statement为单位管理sql语句  
+ -->
+	<!-- 添加农作物分类记录 -->
+	<insert id="addCropClass" parameterType="cropClass">
+		insert into t_cropClass(cropClassName) values 
+		(#{cropClassName})
+	</insert>
+
+	<!-- 按照查询条件分页查询农作物分类记录 -->
+	<select id="queryCropClass" resultMap="cropClassMap" >
+		select t_cropClass.* from t_cropClass ${where} limit #{startIndex},#{pageSize}
+	</select>
+	<resultMap id="cropClassMap" type="cropClass">
+        <id property="cropClassId" column="cropClassId" />
+    </resultMap>
+
+    <!-- 按照查询条件查询所有农作物分类记录 -->
+	<select id="queryCropClassList" resultMap="cropClassMap" >
+		select t_cropClass.* from t_cropClass ${where}
+	</select>
+
+    <!-- 按照查询条件的农作物分类记录数 -->
+	<select id="queryCropClassCount" resultType="int">
+		select count(*) from t_cropClass ${where}
+	</select>
+
+	<!-- 根据主键查询某个农作物分类记录 -->
+	<select id="getCropClass" parameterType="int" resultMap="cropClassMap">
+		select * from t_cropClass where t_cropClass.cropClassId = #{cropClassId}
+	</select>
+
+	<!-- 更新农作物分类记录 -->
+	<update id="updateCropClass" parameterType="cropClass">
+		update t_cropClass set cropClassName=#{cropClassName} where cropClassId = #{cropClassId}
+	</update>
+
+	<!-- 删除农作物分类记录 -->
+	<delete id="deleteCropClass" parameterType="int">
+		delete from t_cropClass where cropClassId=#{cropClassId}
+	</delete>
+
+</mapper>
